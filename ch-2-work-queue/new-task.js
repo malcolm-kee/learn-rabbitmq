@@ -1,8 +1,8 @@
-const amqp = require("amqplib/callback_api");
+const amqp = require('amqplib/callback_api');
 
 amqp.connect(
   {
-    heartbeat: 5
+    heartbeat: 5,
   },
   (err, connection) => {
     if (err) {
@@ -14,15 +14,17 @@ amqp.connect(
         return console.error(error);
       }
 
-      var queue = "work_queue";
-      var msg = process.argv.slice(2).join(" ") || "Hello World";
+      var queue = 'work_queue';
+      var msg = process.argv.slice(2).join(' ') || 'Hello World';
 
+      // both assertQueue durable: true and sendToQueue persistent: true are required
+      // to make the message persistent
       channel.assertQueue(queue, {
-        durable: true
+        durable: true,
       });
 
       channel.sendToQueue(queue, Buffer.from(msg), {
-        persistent: true
+        persistent: true,
       });
       console.log(`send ${msg}`);
 

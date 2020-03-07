@@ -1,6 +1,6 @@
-var amqp = require("amqplib/callback_api");
+var amqp = require('amqplib/callback_api');
 
-amqp.connect("amqp://localhost", (err, connection) => {
+amqp.connect('amqp://localhost', (err, connection) => {
   if (err) {
     return console.error(err);
   }
@@ -10,11 +10,11 @@ amqp.connect("amqp://localhost", (err, connection) => {
       return console.error(error);
     }
 
-    var queue = "Hello";
-    var message = "Hello World!";
+    var queue = 'Hello';
+    var message = 'Hello World!';
 
     channel.assertQueue(queue, {
-      durable: false
+      durable: false,
     });
 
     channel.sendToQueue(queue, Buffer.from(message));
