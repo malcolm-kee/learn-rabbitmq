@@ -33,8 +33,13 @@ amqp.connect('amqp://localhost', (err, connection) => {
             console.log('Consuming logs with logLevel %s', logLevel);
           });
         } else {
+          // this doesn't work
+          // channel.bindQueue(q.queue, exchange, '');
+          // console.log('Consuming logs with all levels');
+
+          // instead, you must listen to specific logLevel
           channel.bindQueue(q.queue, exchange, 'info');
-          console.log('Consuming logs with logLevel info only');
+          console.log('Consuming logs with info level only');
         }
 
         channel.consume(
