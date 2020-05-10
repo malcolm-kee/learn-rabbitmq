@@ -17,10 +17,12 @@ amqp.connect('amqp://localhost', (err, connection) => {
       durable: false,
     });
 
+    const queue = 'routing_queue';
+
     channel.assertQueue(
-      '',
+      queue,
       {
-        exclusive: true,
+        durable: true,
       },
       (err, q) => {
         if (err) {
@@ -28,7 +30,7 @@ amqp.connect('amqp://localhost', (err, connection) => {
         }
 
         if (logLevels.length > 0) {
-          logLevels.forEach(logLevel => {
+          logLevels.forEach((logLevel) => {
             channel.bindQueue(q.queue, exchange, logLevel);
             console.log('Consuming logs with logLevel %s', logLevel);
           });
@@ -42,9 +44,11 @@ amqp.connect('amqp://localhost', (err, connection) => {
           console.log('Consuming logs with info level only');
         }
 
+        channel.prefetch(1);
+
         channel.consume(
           q.queue,
-          msg => {
+          (msg) => {
             if (msg.content) {
               console.log('Received: %s', msg.content.toString());
             }
